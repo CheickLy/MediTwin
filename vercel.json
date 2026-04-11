@@ -1,14 +1,12 @@
 {
   "experimentalServices": {
     "frontend": {
-      "entrypoint": "frontend",
+      "entrypoint": "frontend/package.json",
       "routePrefix": "/",
-      "framework": "create-react-app",
-      "buildCommand": "npm run build",
-      "outputDirectory": "build"
+      "framework": "create-react-app"
     },
     "backend": {
-      "entrypoint": "backend",
+      "entrypoint": "backend/main.py",
       "routePrefix": "/_/backend"
     }
   }
