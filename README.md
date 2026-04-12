@@ -12,8 +12,9 @@ Generic medical dosages don't account for individual differences in genetic make
 * Real-Time Math: Uses SciPy to solve differential equations on every slider change.
 * Bio-Visual Feedback: A Three.js model that distorts and changes color based on toxicity levels.
 
-** Tech Stack **
+**Tech Stack**
 Frontend: React, Three.js, React Three Fiber.
+
 Backend: Python (FastAPI), NumPy, SciPy.
 
 
