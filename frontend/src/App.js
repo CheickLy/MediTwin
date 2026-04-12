@@ -15,6 +15,7 @@ const PatientModel = ({ isToxic, substance }) => {
   const activeColor = getBaseColor();
   
   return (
+    // Float component adds a gentle bobbing and rotation to make the model feel alive
     <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
       <Sphere args={[1, 100, 100]} scale={1.4}>
         <MeshDistortMaterial
