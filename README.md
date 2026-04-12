@@ -13,12 +13,12 @@ Generic medical dosages don't account for individual differences in genetic make
 * Bio-Visual Feedback: A Three.js model that distorts and changes color based on toxicity levels.
 
 **Tech Stack**
-Frontend: React, Three.js, React Three Fiber.
+* Frontend: React, Three.js, React Three Fiber.
 
-Backend: Python (FastAPI), NumPy, SciPy.
+* Backend: Python (FastAPI), NumPy, SciPy.
 
 
-** How to Run **
+**How to Run**
 
 (Make sure to run backend and frontend in 2 seperate terminals)
 
