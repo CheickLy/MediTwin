@@ -8,13 +8,14 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "three": "^0.161.0",
+    "@react-three/drei": "^9.97.1",
+    "@react-three/fiber": "^8.15.16",
+    "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "@react-three/fiber": "^8.15.16",
-    "@react-three/drei": "^9.97.1",
-    "lucide-react": "^0.344.0"
+    "recharts": "^2.12.7",
+    "three": "^0.161.0"
   },
   "browserslist": {
     "production": [
