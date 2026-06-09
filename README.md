@@ -1,8 +1,7 @@
 # MEDI-Twin
 
 ## A 3D Digital Twin for personalized biokinetic modeling
-![MediTwinGif2-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/23ee2870-f0b2-497d-8298-04b8c74e872a)
-https://s8.ezgif.com/tmp/ezgif-8bf0345fd3e3bc95.gif
+<img width="800" height="450" alt="VideoProject3-ezgif com-video-to-gif-converter" src="https://github.com/user-attachments/assets/bc51b53c-752b-4f9e-bb4b-9504bbf4b0f2" />
 
 Generic medical dosages don't account for individual differences in genetic makeup, they only account for the "average human. But there is no "average human". Medi-Twin solves this by creating a personalized digital avatar. By calculating metabolic clearance rates in real-time, I turn invisible body chemistry into an interactive 3D experience.
 
