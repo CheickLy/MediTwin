@@ -8,9 +8,12 @@ Generic medical dosages don't account for individual differences in genetic make
 
 ## Key features
 
-* Personalized Simulation: Adjusts based on weight and metabolic factor.
-* Real-Time Math: Uses SciPy to solve differential equations on every slider change.
-* Bio-Visual Feedback: A Three.js model that distorts and changes color based on toxicity levels.
+* Interactive pharmacokinetic simulation powered by FastAPI and SciPy
+* Real-time concentration vs. time visualization using Recharts
+* Toxicity threshold detection with visual alerting
+* Peak concentration marker and recovery time estimation
+* Dynamic 3D digital twin responding to simulated drug levels
+* Advanced metrics including Peak Time, Half-Life, AUC, and Peak Concentration
 
 **Tech Stack**
 * Frontend: React, Three.js, React Three Fiber.
