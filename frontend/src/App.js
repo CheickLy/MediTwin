@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
+//useFrame for rotation animation, of human model
 import {
   OrbitControls,
-  Sphere,
-  MeshDistortMaterial,
-  Float,
+  useGLTF,
 } from "@react-three/drei";
 
 import {
@@ -52,33 +51,41 @@ function Metric({ label, value }) {
   );
 }
 
-function PatientModel({ isToxic, substance, level }) {
-  const getColor = () => {
-    if (isToxic) return "#ff2d2d";
-    if (substance === "alcohol") return "#ffb000";
-    if (substance === "caffeine") return "#00ffcc";
-    return "#00d2ff";
-  };
 
-  const color = getColor();
+import { useRef } from "react";
+
+function HumanModel({ isToxic }) {
+  const { scene } = useGLTF("/models/human.glb");
+  const meshRef = useRef();
+
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.002;
+    }
+  });
+
+  scene.traverse((child) => {
+    if (child.isMesh) {
+      child.material.color.set( 
+        isToxic ? "#ff2d2d" : "#00d2ff"
+      );
+
+        child.material.emissive.set(
+          isToxic ? "#ff2d2d" : "#00d2ff"
+        );
+
+        child.material.emissiveIntensity = 
+        isToxic ? 0.6 : 0.25;
+    }
+  });
 
   return (
-    <Float speed={2} rotationIntensity={0.4} floatIntensity={0.5}>
-      <Sphere
-        args={[1, 100, 100]}
-        scale={1.15 + level * 0.03}
-      >
-        <MeshDistortMaterial
-          color={color}
-          speed={isToxic ? 4 : 1.5}
-          distort={Math.min(level / 15, 0.7)}
-          roughness={0.15}
-          metalness={0.8}
-          emissive={color}
-          emissiveIntensity={Math.min(level / 10, 1)}
-        />
-      </Sphere>
-    </Float>
+    <primitive
+      ref={meshRef}
+      object={scene}
+      scale={5}
+      position={[0, -0.5, 0]}
+    />
   );
 }
 
@@ -334,24 +341,23 @@ export default function App() {
         {/* 3D MODEL */}
         <div
           style={{
-            height: "60%",
+            height: "100%",
             width: "100%",
           }}
         >
           <Canvas camera={{ position: [0, 0, 4] }}>
-            <ambientLight intensity={0.5} />
+            <ambientLight intensity={1} />
             <pointLight
-              position={[10, 10, 10]}
-              intensity={2}
+              position={[0, 3, 3]}
+              intensity={5}
+              color={data.is_toxic ? "#ff2d2d" : "#00d2ff"}
             />
 
-            <PatientModel
-              isToxic={data.is_toxic}
-              substance={substance}
-              level={data.peak_value}
+            <HumanModel 
+            isToxic={data.is_toxic} 
             />
 
-            <OrbitControls enableZoom={false} />
+            {/* <OrbitControls enableZoom={false} /> */}
           </Canvas>
         </div>
 
@@ -414,7 +420,7 @@ export default function App() {
           style={{
             position: "absolute",
             left: "25px",
-            right: "300px",
+            right: "500px",
             bottom: "25px",
             height: "260px",
             background:
