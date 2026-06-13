@@ -26,27 +26,38 @@ def pk_model(y, t, ka, ke):
 def simulate(
     weight: int = 70,
     gen_factor: float = 1.0,
-    substance: str = "pill"
+    substance: str = "pill",
+    dose: float = 500,
+    age: int = 18,
+    liver_health: float = 1.0
 ):
 
     t = np.linspace(0, 24, 200)
 
+    age_factor = 1.0
+
+    if age > 60:
+        age_factor = 0.85
+    elif age < 18:
+        age_factor = 0.9
+
+    clearance_factor = (
+        gen_factor * liver_health * age_factor
+    )
+
     if substance == "alcohol":
         ka = 2.5
-        ke = 0.12 * gen_factor
-        dose = 14000
+        ke = 0.12 * clearance_factor
         threshold = 8.0
 
     elif substance == "caffeine":
         ka = 3.5
-        ke = 0.08 * gen_factor
-        dose = 100
+        ke = 0.08 * clearance_factor
         threshold = 3.0
 
     else:
         ka = 0.8
-        ke = 0.15 * gen_factor
-        dose = 500
+        ke = 0.15 * clearance_factor
         threshold = 4.5
 
     v_dist = weight * 0.6

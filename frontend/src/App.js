@@ -6,6 +6,8 @@ import {
   useGLTF,
 } from "@react-three/drei";
 
+import "./index.css";
+
 import {
   ResponsiveContainer,
   AreaChart,
@@ -93,6 +95,10 @@ export default function App() {
   const [weight, setWeight] = useState(88);
   const [genFactor, setGenFactor] = useState(1.0);
   const [substance, setSubstance] = useState("pill");
+  const [dose, setDose] = useState(500);
+  const [age, setAge] = useState(18);
+  const [liverHealth, setLiverHealth] = useState(1.0);
+  const [timeIndex, setTimeIndex] = useState(0);
 
   const [data, setData] = useState({
     time: [],
@@ -110,18 +116,19 @@ export default function App() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/simulate?weight=${weight}&gen_factor=${genFactor}&substance=${substance}`
+          `http://127.0.0.1:8000/simulate?weight=${weight}&gen_factor=${genFactor}&substance=${substance}&dose=${dose}&age=${age}&liver_health=${liverHealth}`
         );
 
         const result = await res.json();
         setData(result);
+        setTimeIndex(0);
       } catch (err) {
         console.error(err);
       }
     };
 
     fetchData();
-  }, [weight, genFactor, substance]);
+  }, [weight, genFactor, substance, dose, age, liverHealth]);
 
   const chartData = data.levels.map((level, i) => ({
     time: data.time[i],
@@ -138,8 +145,12 @@ export default function App() {
       : null,
   }));
 
+  const currentTime = data.time?.[timeIndex] || 0;
+  const currentLevel = data.levels?.[timeIndex] || 0;
+  const currentIsToxic = currentLevel > (data.threshold || 0);
+
   const getBackground = () => {
-    if (data.is_toxic) {
+    if (currentIsToxic) {
       return "radial-gradient(circle at center, rgba(255,45,45,0.12) 0%, #050505 75%)";
     }
 
@@ -160,12 +171,13 @@ export default function App() {
       {/* LEFT PANEL */}
       <div
         style={{
-          width: "360px",
-          padding: "40px",
+          width: "400px",
+          padding: "25px",
           background: "rgba(10,10,10,0.95)",
-          borderRight: "1px solid rgba(255,255,255,0.05)",
+          borderRight: "1px solid rgba(255,255,255,0.01)",
           backdropFilter: "blur(20px)",
           zIndex: 5,
+
         }}
       >
         <h1
@@ -186,14 +198,14 @@ export default function App() {
             color: "#555",
             fontSize: "11px",
             letterSpacing: "3px",
-            marginBottom: "40px",
+            marginBottom: "10px",
           }}
         >
           DIGITAL PHARMACOKINETIC ENGINE
         </p>
 
         {/* Substance */}
-        <div style={{ marginBottom: "30px" }}>
+        <div style={{ marginBottom: "15px" }}>
           <label
             style={{
               display: "block",
@@ -210,7 +222,7 @@ export default function App() {
             onChange={(e) => setSubstance(e.target.value)}
             style={{
               width: "100%",
-              padding: "14px",
+              padding: "13px",
               background: "#111",
               color: "#fff",
               border: "1px solid #222",
@@ -224,7 +236,7 @@ export default function App() {
         </div>
 
         {/* Weight */}
-        <div style={{ marginBottom: "30px" }}>
+        <div style={{ marginBottom: "15px" }}>
           <div
             style={{
               display: "flex",
@@ -258,7 +270,7 @@ export default function App() {
         </div>
 
         {/* Metabolism */}
-        <div style={{ marginBottom: "40px" }}>
+        <div style={{ marginBottom: "15px" }}>
           <div
             style={{
               display: "flex",
@@ -295,15 +307,74 @@ export default function App() {
             }}
           />
         </div>
+        
+        {/* Dosage */}
+        <div style={{ marginBottom: "15px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+            <span style={{ color: "#777" }}>Dosage</span>
+            <span style={{ color: "#00d2ff", fontFamily: "'IBM Plex Mono'" }}>
+              {dose} mg
+            </span>
+          </div>
 
-        {data.is_toxic && (
+          <input
+            type="range"
+            min="50"
+            max="1000"
+            step="50"
+            value={dose}
+            onChange={(e) => setDose(Number(e.target.value))}
+            style={{ width: "100%", accentColor: "#00d2ff" }}
+          />
+        </div>
+        
+        {/*Age*/}
+        <div style={{ marginBottom: "15px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+            <span style={{ color: "#777" }}>Age</span>
+            <span style={{ color: "#00d2ff", fontFamily: "'IBM Plex Mono'" }}>
+              {age} years
+            </span>
+          </div>
+
+          <input
+            type="range"
+            min= "12"
+            max="90"
+            value={age}
+            onChange={(e) => setAge(Number(e.target.value))}
+            style={{ width: "100%", accentColor: "#00d2ff" }}
+          />
+        </div>
+
+        {/* Liver Health */}
+        <div style={{ marginBottom: "15px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+            <span style={{ color: "#777" }}>Liver Health</span>
+            <span style={{ color: "#00d2ff", fontFamily: "'IBM Plex Mono'" }}>
+              {liverHealth.toFixed(1)}x
+            </span>
+          </div>
+
+          <input
+            type="range"
+            min="0.4"
+            max="1.4"
+            step="0.1"
+            value={liverHealth}
+            onChange={(e) => setLiverHealth(Number(e.target.value))}
+            style={{ width: "100%", accentColor: "#00d2ff" }}
+          />
+        </div>
+
+        {currentIsToxic && (
           <div
             style={{
               background:
                 "rgba(255,45,45,0.08)",
               borderLeft:
                 "4px solid #ff2d2d",
-              padding: "20px",
+              padding: "10px",
               borderRadius: "8px",
             }}
           >
@@ -330,6 +401,10 @@ export default function App() {
         )}
       </div>
 
+  
+    
+
+
       {/* MAIN PANEL */}
       <div
         style={{
@@ -354,7 +429,7 @@ export default function App() {
             />
 
             <HumanModel 
-            isToxic={data.is_toxic} 
+            isToxic={currentIsToxic} 
             />
 
             {/* <OrbitControls enableZoom={false} /> */}
@@ -386,7 +461,7 @@ export default function App() {
                 "'Space Grotesk', sans-serif",
               fontSize: "56px",
               fontWeight: 700,
-              color: data.is_toxic
+              color: currentIsToxic
                 ? "#ff2d2d"
                 : "#00d2ff",
             }}
@@ -409,18 +484,68 @@ export default function App() {
             zIndex: 3,
           }}
         > 
+          <Metric label="CURRENT" value={`${currentLevel.toFixed(2)} mg/L`} />
           <Metric label="PEAK TIME" value={`${data.peak_time.toFixed(1)} hr`} />
           <Metric label="HALF LIFE" value={`${data.half_life.toFixed(1)} hr`} />
           <Metric label="AUC" value={data.auc.toFixed(1)} />
           <Metric label="PEAK CONC." value={`${data.peak_value.toFixed(2)} mg/L`} />
         </div>
 
+        <div
+          style={{
+            position: "absolute",
+            right: "50px",
+            bottom: "40px",
+            width: "220px",
+            background: "rgba(0,0,0,0.45)",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            borderRadius: "14px",
+            padding: "15px",
+            zIndex: 4,
+          }}
+        >
+          <div
+            style={{
+              color: "#666",
+              fontSize: "11px",
+              letterSpacing: "2px",
+              marginBottom: "10px",
+            }}
+          >
+            SIMULATION TIME
+          </div>
+
+          <div
+            style={{
+              color: currentIsToxic ? "#ff2d2d" : "#00d2ff",
+              fontFamily: "'IBM Plex Mono'",
+              marginBottom: "10px",
+            }}
+          >
+            {currentTime.toFixed(1)} hr
+          </div>
+
+          <input
+            type="range"
+            min="0"
+            max={Math.max(data.levels.length - 1, 0)}
+            value={timeIndex}
+            onChange={(e) => setTimeIndex(Number(e.target.value))}
+            style={{
+              width: "100%",
+              accentColor: currentIsToxic ? "#ff2d2d" : "#00d2ff",
+            }}
+          />
+        </div>
+
+
         {/* GRAPH */}
         <div
           style={{
             position: "absolute",
             left: "25px",
-            right: "500px",
+            right: "585px",
             bottom: "25px",
             height: "260px",
             background:
@@ -453,7 +578,7 @@ export default function App() {
               <ReferenceDot
                 x={data.peak_time}
                 y={data.peak_value}
-                r={8}
+                r={6}
                 fill="#ffffff"
                 stroke="#00d2ff"
                 strokeWidth={3}
@@ -464,6 +589,21 @@ export default function App() {
                   fontSize: 12,
                 }}
               />
+
+              <ReferenceDot
+                x={currentTime}
+                y={currentLevel}
+                r={6}
+                fill={currentIsToxic ? "#ff2d2d" : "#00d2ff"}
+                stroke="#ffffff"
+                strokeWidth={2}
+                label={{
+                  value: `Now ${currentLevel.toFixed(2)}`,
+                  position: "bottom",
+                  fill: currentIsToxic ? "#ff2d2d" : "#00d2ff",
+                  fontSize: 11,
+              }}
+            />
 
               <XAxis
                 dataKey="time"
