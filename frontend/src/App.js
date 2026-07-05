@@ -92,6 +92,8 @@ function HumanModel({ isToxic }) {
 }
 
 export default function App() {
+  const API_URL = import.meta.env.VITE_API_URL;
+  
   const [weight, setWeight] = useState(88);
   const [genFactor, setGenFactor] = useState(1.0);
   const [substance, setSubstance] = useState("pill");
@@ -116,7 +118,7 @@ export default function App() {
     const fetchData = async () => {
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/simulate?weight=${weight}&gen_factor=${genFactor}&substance=${substance}&dose=${dose}&age=${age}&liver_health=${liverHealth}`
+          `${API_URL}/simulate?weight=${weight}&gen_factor=${genFactor}&substance=${substance}&dose=${dose}&age=${age}&liver_health=${liverHealth}`
         );
 
         const result = await res.json();
