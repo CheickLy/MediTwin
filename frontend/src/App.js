@@ -87,6 +87,7 @@ function HumanModel({ isToxic }) {
       object={scene}
       scale={5}
       position={[0, -0.5, 0]}
+      rotation={[0, Math.PI, 0]}
     />
   );
 }
